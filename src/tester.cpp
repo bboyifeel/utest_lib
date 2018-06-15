@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include "tester.h"
 #include "system.h"
-#include "utils.h"
 #include "file_search.h"
 #include "test_runner.h"
-#include "test_interface.h"
 #include "test_registration.h"
 
 #include <fstream>

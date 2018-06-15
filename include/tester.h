@@ -6,7 +6,6 @@ namespace xTest
 {
 
 class eTestRunner;
-class eOutputInterface;
 
 //**************************************************************************************************
 //	eTester
@@ -32,8 +31,7 @@ protected:
 	bool					succeeded		= false;
 	eTestRunner*			runner			= nullptr;
 	eResults				results;
-	xIO::FileName		configsPath;
-	eOutputInterface*		outputInterface;
+	xIO::FileName			configsPath;
 	json					jFile;
 };
 

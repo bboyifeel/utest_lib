@@ -1,10 +1,9 @@
 #pragma once
 
-#define TEST_API
-
 #include "json.hpp"
 #include "test_block.h"
 #include "test_registration.h"
+#include "json.hpp"
 using json = nlohmann::json;
 
 namespace xTest
@@ -102,7 +101,7 @@ template <class T> eTestBlock* eTestBlocksBase<T>::LoadBlock(json& _jFile)
 	if (_jFile["name"].is_null())
 		return nullptr;
 
-    std::string name = _jFile["name"];
+	std::string name = _jFile["name"];
 	eTestBlock* block = CreateBlock(name);
 	if(!block)
 	{

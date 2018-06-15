@@ -9,3 +9,15 @@
 #else//WINDOWS
 #	define TEST_API
 #endif//WINDOWS
+
+#include <map>
+#include <vector>
+#include <string>
+#include <iostream>
+
+#ifdef WINDOWS
+#	include <windows.h>
+#endif//WINDOWS
+
+#include "json.hpp"
+using json = nlohmann::json;
