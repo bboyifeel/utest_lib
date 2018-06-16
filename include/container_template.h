@@ -76,10 +76,15 @@ public:
 	{
 		if (empty()) { return; }
 
-		ForEach(eVectorBase, i, *this)
+		//ForEach(eVectorBase, i, *this)
+		if(!(*this).empty())
 		{
-			DestroyItem(*i);
+			for(eVectorBase::iterator i = (*this).begin(), e_i = (*this).end(); i != e_i; ++i)
+			{
+				DestroyItem(*i);
+			}
 		}
+		
 		this->clear();
 	}
 	virtual void Add(T* _item)
@@ -105,7 +110,7 @@ public:
 	{
 		if (!empty() && _indFrom < size())
 		{
-			size_type	count = Min<size_type>(_count > 0 ? _count : size(), size() - _indFrom);
+			size_type	count = xBase::Min<size_type>(_count > 0 ? _count : size(), size() - _indFrom);
 			iterator	from = begin() + _indFrom;
 			iterator	to = from + count;
 
@@ -218,7 +223,7 @@ public:
 
 	void delete_for(SameValue<T*> _condition)
 	{
-        ::delete_for((std::vector<T*>&)*this, _condition);
+        xBase::delete_for((std::vector<T*>&)*this, _condition);
 	}
 
 protected:
@@ -227,9 +232,14 @@ protected:
 	void Assign(const eVectorBase& _exmp)
 	{
 		Clear();
-		CForEach(eVectorBase, i, _exmp)
+
+		//CForEach(eVectorBase, i, _exmp)
+		if(!(_exmp).empty())
 		{
-			this->push_back(Copier::Copy(*i));	// Don't use Add
+			for(eVectorBase::const_iterator i = (_exmp).begin(), e_i = (_exmp).end(); i != e_i; ++i)
+			{
+				this->push_back(Copier::Copy(*i));	// Don't use Add
+			}
 		}
 	}
 	virtual void PrepareToCut(T*& _item) {}
@@ -256,6 +266,6 @@ public:
 protected:
 	virtual void DestroyItem(T*& _item) override
 	{
-		::SAFE_DELETE(_item);
+		xBase::SAFE_DELETE(_item);
 	}
 };

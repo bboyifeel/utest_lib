@@ -96,7 +96,7 @@ bool eTester::DoRunner(const std::string& _config)
 		result = runner->Do();
 	}
 
-	SAFE_DELETE(runner);
+	xBase::SAFE_DELETE(runner);
 	return result;
 }
 

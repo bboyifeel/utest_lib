@@ -10,8 +10,6 @@ namespace xTest
 //--------------------------------------------------------------------------------------------------
 class TEST_API eTestBlock
 {
-	DEFINE_POST_STATE(int32_t, resultActual, ResultActual);
-	DEFINE_SIMPLE_STATE(int32_t, resultExpected, ResultExpected);
 protected:
 	class eResultLoader;
 	enum eState
@@ -31,16 +29,30 @@ public:
 	virtual void		Done()			{}
 	virtual bool		Start();
 
-	virtual bool		IsCompleted()	const		{ return state == S_COMPLETED;	}
-	const std::string&	Name()			const		{ return name;					}
+	virtual bool		IsCompleted()		const		{ return state == S_COMPLETED;		}
+	const std::string&	Name()				const		{ return name;						}
 
 	virtual bool		Load(json&);
+
+	inline	int32_t		ResultExpected()	const		{ return (int32_t)resultExpected;	}
+	inline	void		ResultExpected(int32_t result)	{ resultExpected = result;			}
+	inline	int32_t		ResultActual()		const		{ return (int32_t)resultActual;		}					
+	inline	void		ResultActual(int32_t result)												
+	{																						
+		if (resultActual != result)																
+		{																					
+			resultActual = result;															
+			OnResultActual();																
+		}																					
+	}
+
 protected:
+	virtual	void			OnResultActual();
 	virtual bool			LoadIdent(json&);
-	virtual eResultLoader*	ResultLoader()	const	{ return new eResultLoader;		}
+	virtual eResultLoader*	ResultLoader()	const		{ return new eResultLoader;			}
 
 	void				State(int32_t);
-	virtual void		NextState(int32_t oldState)	{}
+	virtual void		NextState(int32_t oldState)		{}
 
 	template <typename TEST_RESULT_ENUM>
 	inline void			ResultActual(TEST_RESULT_ENUM _result)	{ ResultActual((int32_t)_result); }

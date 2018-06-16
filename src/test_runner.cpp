@@ -62,9 +62,12 @@ bool eTestRunner::Init()
 void eTestRunner::Done()
 {
 	sequences->Clear();
-	SAFE_DELETE(sequences);
-	SAFE_CALL(initBlock)->Done();
-	SAFE_DELETE(initBlock);
+	xBase::SAFE_DELETE(sequences);
+	
+	if(initBlock)
+		initBlock->Done();
+
+	xBase::SAFE_DELETE(initBlock);
 }
 //==================================================================================================
 //	eTestRunner::CreateSequences

@@ -64,7 +64,7 @@ protected:
 	{
 		for(Entry* entry = _start; entry; entry = entry->next)
 		{
-			if(!strcasecompare(_name, entry->caption))
+			if(!xBase::strcasecompare(_name, entry->caption))
 			{
 				return entry;
 			}

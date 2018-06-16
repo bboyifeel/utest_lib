@@ -35,7 +35,7 @@ bool eTestBlock::LoadIdent(json& _jFile)
 	{
 		resultLoader = ResultLoader();
 		ret = resultLoader->LoadResult(_jFile, this);
-		SAFE_DELETE(resultLoader);
+		xBase::SAFE_DELETE(resultLoader);
 	}
 	return ret;
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "entry.h"
-#include "utils.h"
 
 namespace xTest
 {
@@ -33,7 +32,7 @@ TEST_API	eTestBlock*			CreateBlock(const std::string& name);
 //--------------------------------------------------------------------------------------------------
 template <typename T> T* 	CreateBlock()
 {
-	return CAST(T, CreateBlock((std::string)T::NAME));
+	return dynamic_cast<T*>(CreateBlock((std::string)T::NAME));
 }
 
 //**************************************************************************************************

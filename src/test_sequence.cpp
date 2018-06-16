@@ -19,7 +19,7 @@ eTestSequence::eTestSequence()
 eTestSequence::~eTestSequence()
 {
 	blocks->Clear();
-	SAFE_DELETE(blocks);
+	xBase::SAFE_DELETE(blocks);
 }
 //==================================================================================================
 //	eTestSequence::Start
@@ -71,7 +71,9 @@ eTestBlock* eTestSequence::Current() const
 //--------------------------------------------------------------------------------------------------
 void eTestSequence::CurrentStart()
 {
-	SAFE_CALL(Current())->Start();
+	eTestBlock* current = Current();
+	if(current)
+		current->Start();
 }
 //==================================================================================================
 //	eTestSequence::IsCompleted

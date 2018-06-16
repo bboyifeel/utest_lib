@@ -35,7 +35,7 @@ void Search::End()
 	closedir(group);
 #endif//WINDOWS
 	group = NULL;
-	Clear(ffd);
+	xBase::Clear(ffd);
 }
 //=============================================================================
 //	eSearch::Next

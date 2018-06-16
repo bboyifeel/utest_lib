@@ -110,7 +110,7 @@ template <class T> eTestBlock* eTestBlocksBase<T>::LoadBlock(json& _jFile)
 	}
 	if(!block->Load(_jFile))
 	{
-		SAFE_DELETE(block);
+		xBase::SAFE_DELETE(block);
 		return nullptr;
 	}
 	return block;
