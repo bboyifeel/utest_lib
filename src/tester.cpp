@@ -108,10 +108,9 @@ std::string ToString(const eTester::eResults& _results)
 	std::string res;
  	for(auto const &item : _results)
  	{
+		res += item.second ? "[Passed]" : "[Failed]";
+		res += " - ";
 		res += item.first;
-		res += "\t";
-		res += "- ";
-		res += item.second ? "Passed" : "Failed";
 		res += "\n";
 	}
 	return res;
