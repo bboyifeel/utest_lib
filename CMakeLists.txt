@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.9)
-project(UTestingLib)
+project(utest_lib)
 
 set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,8 +22,4 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 #Generate the shared library from the sources
-add_library(test_lib SHARED ${SOURCES} ${HEADERS})
-
-#Set the location for library installation -- i.e., /usr/lib in this case
-# not really necessary in this example. Use "sudo make install" to apply
-# install(TARGETS testStudent DESTINATION /usr/lib)
+add_library(utest_lib SHARED ${SOURCES} ${HEADERS})
