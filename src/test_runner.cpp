@@ -39,7 +39,7 @@ bool eTestRunner::Init()
 {
 	if(initBlock && !initBlock->Start())
 	{
-		//LSD_WARNING("[eTestRunner] Init fail: initializer is not started");
+		xIO::Log::Warning("[eTestRunner] Init fail: initializer is not started");
 		return false;
 	}
 	while(initBlock && !initBlock->IsCompleted())
@@ -48,10 +48,11 @@ bool eTestRunner::Init()
 	}
 	if(initBlock && initBlock->ResultActual() != initBlock->ResultExpected())
 	{
-		/*LSD_WARNING(format("[eTestRunner] Init fail: initializer result is not expected. Actual/%1%, expect/%2%")
-			% initBlock->ResultActual()
-			% initBlock->ResultExpected());
-*/
+		std::string message = "[eTestRunner] Init fail: Actual/";
+					message += initBlock->ResultActual();
+					message += ", expect/";
+					message += initBlock->ResultExpected();
+		xIO::Log::Warning(message);
 		return false;
 	}
 	return true;
@@ -84,7 +85,7 @@ bool eTestRunner::Load(json& _jFile)
 	sequences = CreateSequences();
 	if(!LoadIdent(_jFile))
 	{
-		//LSD_WARNING("[eTestRunner] Load fail");
+		xIO::Log::Warning("[eTestRunner] Load fail");
 		return false;
 	}
 
@@ -115,7 +116,7 @@ bool eTestRunner::LoadIdent(json& _jFile)
 		initBlock = CreateBlock(name);
 		if(!initBlock)
 		{
-			//LSD_WARNING(format("[eTestRunner] Load fail: unknown initializer name: %1%") % name);
+			xIO::Log::Warning("[eTestRunner] Load fail: unknown initializer name: " + name);
 			return false;
 		}
 		if(!initBlock->Load(_jFile["initializer"]))

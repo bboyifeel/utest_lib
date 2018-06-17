@@ -9,7 +9,6 @@ namespace xTest
 //--------------------------------------------------------------------------------------------------
 bool eTestBlock::Start()
 {
-	//LSD_DESIRE(state == S_OPENED);
 	State(S_STARTING);
 	return true;
 }
@@ -20,7 +19,7 @@ bool eTestBlock::Load(json& _jFile)
 {
 	if(!LoadIdent(_jFile))
 	{
-		//LSD_WARNING("[eTestBlock] Load fail");
+		xIO::Log::Warning("[eTestBlock] Load fail");
 		return false;
 	}
 	return true;

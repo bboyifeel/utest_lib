@@ -86,7 +86,7 @@ template <class T> bool eTestBlocksBase<T>::Load(json& _jFile)
 		}
 		else
 		{
-			//LSD_WARNING(format("[eTestBlocks] Load fail"));
+			xIO::Log::Warning("[eTestBlocks] Load fail");
 			return false;
 		}
 	}
@@ -105,7 +105,7 @@ template <class T> eTestBlock* eTestBlocksBase<T>::LoadBlock(json& _jFile)
 	eTestBlock* block = CreateBlock(name);
 	if(!block)
 	{
-		//LSD_WARNING("[eTestBlocks] Load fail: unknown test block name");
+		xIO::Log::Warning("[eTestBlocks] Load fail: unknown test block name");
 		return nullptr;
 	}
 	if(!block->Load(_jFile))

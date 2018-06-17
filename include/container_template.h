@@ -14,7 +14,6 @@ template<class T> class eVectorItemMultiplier_Default
 public:
 	static T*	Copy(T* _item)
 	{
-		//LSD_STOP;
 		return _item;
 	}
 };

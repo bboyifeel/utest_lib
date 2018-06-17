@@ -82,7 +82,7 @@ bool eTester::DoRunner(const std::string& _config)
 
 	if(jFile["test"].is_null())
 	{
-		//LSD_WARNING(format("[eTestRunner] Load fail: invalid signature, it must start with \"test\""));
+		xIO::Log::Warning("[eTester] Load fail: invalid signature, it must start with \"test\")");
 		return false;
 	}
 

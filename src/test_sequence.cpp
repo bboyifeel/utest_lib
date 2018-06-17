@@ -47,10 +47,14 @@ bool eTestSequence::UpdateCurrent()
 	{
 		if(currentBlock->ResultExpected() != currentBlock->ResultActual())
 		{
-			/*LSD_WARNING(format("[eTestSequence] UpdateCurrent fail: Test \"%1%\" is failed: expected \"%2%\" != actual \"%3%\"")
-				% currentBlock->Name()
-				% currentBlock->ResultExpected()
-				% currentBlock->ResultActual());*/
+			std::string message = "[eTestSequence] UpdateCurrent fail: Test \"";
+						message += currentBlock->Name();
+						message += "\"is failed: expected \"";
+						message += currentBlock->ResultExpected();
+						message += "\" != actual \"";
+						message += currentBlock->ResultActual();
+						message += "\"";
+			xIO::Log::Warning(message);
 			return false;
 		}
 
@@ -89,7 +93,7 @@ bool eTestSequence::Load(json& _jFile)
 {
 	if(!LoadItems(_jFile["sequence"]))
 	{
-		//LSD_WARNING("[eTestSequence] Load fail");
+		xIO::Log::Warning("[eTestSequence] Load fail");
 		return false;
 	}
 	return true;
@@ -117,7 +121,7 @@ bool eTestSequence::LoadItems(json& _jFile)
 		}
 		else
 		{
-			//LSD_WARNING("[eTestSequence] LoadItems fail: undefined block ident");
+			xIO::Log::Warning("[eTestSequence] LoadItems fail: undefined block ident");
 			return false;
 		}
 	}
@@ -189,7 +193,7 @@ bool eTestSequences::Load(json& _jFile)
 		eTestSequence* sequence = nullptr;
 		if(!LoadItems(_jFile[i], sequence))
 		{
-			//LSD_WARNING(format("[eTestSequences] Load fail"));
+			xIO::Log::Warning("[eTestSequences] Load fail");
 			return false;
 		}
 		if(!sequence || !sequence->Load(_jFile[i]))
