@@ -4,4 +4,5 @@
 #endif//WINDOWS
 
 #include "lib.h"
+#include "log.h"
 #include "utils.h"
