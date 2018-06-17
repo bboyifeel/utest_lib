@@ -35,10 +35,18 @@ bool eTester::Init()
 
 	if(!xSystem::Access(configsPath.str(), xSystem::A_READ))
 	{
-		xIO::Log::Error("[eTester] Fail to access path " + configsPath.str());
+		std::string	message = "[eTester] Fail to access path ";
+					message += "\"";
+					message += configsPath.str();
+					message += "\"";
+		xIO::Log::Error(message);
 		return false;
 	}
-
+	std::string	message = "[eTester] Path successfully accessed ";
+				message += "\"";
+				message += configsPath.str();
+				message += "\"";
+	xIO::Log::Debug(message);
 	isInitialized = true;
 	return true;
 }
@@ -51,7 +59,7 @@ void eTester::Done()
 	{
 		results.clear();
 		succeeded = false;
-		isInitialized = false;
+		isInitialized = false;	
 	}
 	xIO::Log::Flush(logsPath.str());
 	xIO::Log::Clear();
@@ -66,23 +74,49 @@ void eTester::Run()
 
 	for(; cfgSearch.Valid(); cfgSearch.Next())
 	{
-		std::string fullPathWName = configsPath.GetAdd(cfgSearch.Name()).str();
-		results[cfgSearch.Name()] = DoRunner(fullPathWName);
-		succeeded &= results[cfgSearch.Name()];
+		results[cfgSearch.Name()] = false;
 	}
+	std::string message = "[eTester] Run: Found ";
+				message += std::to_string(results.size());
+				message += " JSON ";
+				message += results.size() != 1 ?	"files" : "file";
+				message += " in folder ";
+				message += "\"";
+				message += configsPath.str();
+				message += "\"";
+
+	xIO::Log::Debug(message);
+
+	std::string fileName;
+	for(eResults::iterator it = results.begin(); it != results.end(); ++it)
+	{
+		fileName = it->first;
+		results[fileName] = DoRunner(fileName);
+		succeeded &= results[fileName];
+	}
+	xIO::Log::Debug(ToString(results));				//to be changed
 }
 //==================================================================================================
 //	eTester::DoRunner
 //--------------------------------------------------------------------------------------------------
-bool eTester::DoRunner(const std::string& _config)
+bool eTester::DoRunner(const std::string& _configName)
 {
-	std::ifstream file(_config);
+	std::string		fullPathWName = configsPath.GetAdd(_configName).str();
+	std::ifstream	file(fullPathWName);
 	jFile = json::parse(file);
 	file.close();
 
+	std::string message = "[eTester] ";
+				message += "\"";
+				message += _configName;
+				message += "\"";
+
+	xIO::Log::Debug(message + " File loading started");
+
 	if(jFile["test"].is_null())
 	{
-		xIO::Log::Warning("[eTester] Load fail: invalid signature, it must start with \"test\")");
+		message += " DoRunner fail: invalid signature, it must start with \"test\"";
+		xIO::Log::Error(message);
 		return false;
 	}
 
@@ -96,11 +130,19 @@ bool eTester::DoRunner(const std::string& _config)
 		runner = new eTestRunner;
 	}
 
+	runner->ConfigFileName(_configName);
 	bool result = runner->Load(jFile["test"]);
 	
 	if(result)
 	{
+		message += " DoRunner: File successfully loaded";
+		xIO::Log::Debug(message);
 		result = runner->Do();
+	}
+	else
+	{
+		message += " DoRunner: Fail to load file";
+		xIO::Log::Error(message);
 	}
 
 	xBase::SAFE_DELETE(runner);

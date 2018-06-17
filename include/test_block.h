@@ -33,6 +33,7 @@ public:
 	const std::string&	Name()				const		{ return name;						}
 
 	virtual bool		Load(json&);
+	void				ConfigFileName(const std::string& fName);
 
 	inline	int32_t		ResultExpected()	const		{ return (int32_t)resultExpected;	}
 	inline	void		ResultExpected(int32_t result)	{ resultExpected = result;			}
@@ -63,6 +64,7 @@ protected:
 	int32_t				resultExpected	= INVALID_RESULT;
 	eResultLoader*		resultLoader	= nullptr;
 
+	std::string			configFileName;
 protected:
 	//==============================================================================================
 	//	eResultLoader

@@ -1,4 +1,5 @@
 #pragma once
+#include "utils.h"
 
 template<class T, class D = T> class Entry
 {

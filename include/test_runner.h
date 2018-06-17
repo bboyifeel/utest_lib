@@ -17,6 +17,7 @@ public:
 	bool						Do();
 
 	bool						Load(json&);
+	void						ConfigFileName(const std::string& fName);
 protected:
 	virtual bool				Init();
 	virtual void				Done();
@@ -27,6 +28,8 @@ protected:
 	bool						isLoaded	= false;
 	eTestBlock*					initBlock	= nullptr;
 	eTestSequences*				sequences	= nullptr;
+
+	std::string					configFileName;
 };
 
 }//namespace xTest

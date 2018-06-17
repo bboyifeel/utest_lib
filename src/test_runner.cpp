@@ -14,6 +14,13 @@ const int32_t dispatchPeriod = 5;
 //--------------------------------------------------------------------------------------------------
 bool eTestRunner::Do()
 {
+	std::string message = "[eTestRunner] ";
+				message += "\"";
+				message += configFileName;
+				message += "\"";
+				message += " Do: Test execution started";
+	xIO::Log::Debug(message);
+
 	bool result = isLoaded
 		&& Init()
 		&& sequences->Start(*this);
@@ -39,7 +46,7 @@ bool eTestRunner::Init()
 {
 	if(initBlock && !initBlock->Start())
 	{
-		xIO::Log::Warning("[eTestRunner] Init fail: initializer is not started");
+		xIO::Log::Error("[eTestRunner] Init fail: initializer is not started");
 		return false;
 	}
 	while(initBlock && !initBlock->IsCompleted())
@@ -52,7 +59,7 @@ bool eTestRunner::Init()
 					message += initBlock->ResultActual();
 					message += ", expect/";
 					message += initBlock->ResultExpected();
-		xIO::Log::Warning(message);
+		xIO::Log::Error(message);
 		return false;
 	}
 	return true;
@@ -83,9 +90,10 @@ eTestSequences* eTestRunner::CreateSequences()
 bool eTestRunner::Load(json& _jFile)
 {
 	sequences = CreateSequences();
+	sequences->ConfigFileName(configFileName);
+
 	if(!LoadIdent(_jFile))
 	{
-		xIO::Log::Warning("[eTestRunner] Load fail");
 		return false;
 	}
 
@@ -93,19 +101,40 @@ bool eTestRunner::Load(json& _jFile)
 	return isLoaded;
 }
 //==================================================================================================
+//	eTestRunner::ConfigFileName
+//--------------------------------------------------------------------------------------------------
+void eTestRunner::ConfigFileName(const std::string& _fName)
+{
+	configFileName = _fName;
+}
+//==================================================================================================
 //	eTestRunner::LoadIdent
 //--------------------------------------------------------------------------------------------------
 bool eTestRunner::LoadIdent(json& _jFile)
 {
+	std::string message = "[eTestRunner] ";
+				message += "\"";
+				message += configFileName;
+				message += "\"";
+				message += " LoadIdent fail: ";
 	if(_jFile["name"].is_null())
 	{
+		message += " Couldn't find ident - name";
+		xIO::Log::Error(message);
 		return false;
 	}
 
 	std::string tmpName = _jFile["name"];
 	name = tmpName; //must be unique for each test
 
-	if(_jFile["sequences"].is_null() || !sequences->Load(_jFile["sequences"]))
+	if(_jFile["sequences"].is_null())
+	{
+		message += "Couldn't find ident - sequences";
+		xIO::Log::Error(message);
+		return false;
+	}
+
+	if(!sequences->Load(_jFile["sequences"]))
 	{
 		return false;
 	}
@@ -116,11 +145,26 @@ bool eTestRunner::LoadIdent(json& _jFile)
 		initBlock = CreateBlock(name);
 		if(!initBlock)
 		{
-			xIO::Log::Warning("[eTestRunner] Load fail: unknown initializer name: " + name);
+			std::string message = "[eTestRunner] ";
+						message += "\"";
+						message += configFileName;
+						message += "\"";
+						message += " LoadIdent:";
+						message += " Unknown initializer name: ";
+						message += name;
+			xIO::Log::Warning(message);
 			return false;
 		}
 		if(!initBlock->Load(_jFile["initializer"]))
+		{
 			return false;
+		}
+		
+	}
+	else
+	{
+		message += "Couldn't find ident - initializer";
+		xIO::Log::Warning(message);
 	}
 
 	return true;

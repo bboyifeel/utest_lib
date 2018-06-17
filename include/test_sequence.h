@@ -23,6 +23,7 @@ public:
 
 	virtual bool		IsCompleted()		const;
 	virtual bool		Load(json&);
+	void				ConfigFileName(const std::string& fName);
 protected:
 	bool				UpdateCurrent();
 	eTestBlock*			Current() const;
@@ -33,6 +34,8 @@ protected:
 
 	eTestBlocks_t*		blocks = nullptr;
 	size_t				current = 0;
+
+	std::string			configFileName;
 };
 
 //**************************************************************************************************
@@ -49,7 +52,10 @@ public:
 
 	virtual bool	IsCompleted() const						override;
 	virtual	bool	Load(json&)								override;
+	void			ConfigFileName(const std::string& fName);
+protected:
 	virtual bool	LoadItems(json& _jFile, eTestSequence*&);
+	std::string		configFileName;
 };
 
 }//namespace xTest

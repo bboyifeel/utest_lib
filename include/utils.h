@@ -8,6 +8,10 @@
 #   include <unistd.h>
 #endif
 
+#ifndef WINDOWS
+inline void            Sleep(uint32_t ms)          { usleep(useconds_t(ms) * 1000); }
+#endif
+
 namespace xBase
 {
 
@@ -39,9 +43,5 @@ inline int32_t		strcasecompare(const char* _str1, const char* _str2)						{ retu
 #else //WINDOWS
 inline int32_t		strcasecompare(const char* _str1, const char* _str2)						{ return strcasecmp(_str1, _str2); }
 #endif //WINDOWS
-
-#ifndef WINDOWS
-inline void			Sleep(uint32_t ms)          { usleep(useconds_t(ms) * 1000); }
-#endif
 
 }//namespace xBase

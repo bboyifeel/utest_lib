@@ -54,7 +54,7 @@ bool eTestSequence::UpdateCurrent()
 						message += "\" != actual \"";
 						message += currentBlock->ResultActual();
 						message += "\"";
-			xIO::Log::Warning(message);
+			xIO::Log::Error(message);
 			return false;
 		}
 
@@ -91,12 +91,14 @@ bool eTestSequence::IsCompleted() const
 //--------------------------------------------------------------------------------------------------
 bool eTestSequence::Load(json& _jFile)
 {
-	if(!LoadItems(_jFile["sequence"]))
-	{
-		xIO::Log::Warning("[eTestSequence] Load fail");
-		return false;
-	}
-	return true;
+	return LoadItems(_jFile["sequence"]);
+}
+//==================================================================================================
+//	eTestSequence::ConfigFileName
+//--------------------------------------------------------------------------------------------------
+void eTestSequence::ConfigFileName(const std::string& _fName)
+{
+	configFileName = _fName;
 }
 //==================================================================================================
 //	eTestSequence::LoadItems
@@ -112,7 +114,7 @@ bool eTestSequence::LoadItems(json& _jFile)
 		}
 		else if(!_jFile[i]["block"].is_null())
 		{
-			eTestBlock* block = eTestBlocks::LoadBlock(_jFile[i]["block"]);
+			eTestBlock* block = eTestBlocks::LoadBlock(_jFile[i]["block"], configFileName);
 			if(!block)
 			{
 				return false;
@@ -121,7 +123,12 @@ bool eTestSequence::LoadItems(json& _jFile)
 		}
 		else
 		{
-			xIO::Log::Warning("[eTestSequence] LoadItems fail: undefined block ident");
+			std::string message = "[eTestSequence] ";
+						message += "\"";
+						message += configFileName;
+						message += "\"";
+						message += " LoadItems fail: Undefined block ident";
+			xIO::Log::Error(message);
 			return false;
 		}
 	}
@@ -133,6 +140,7 @@ bool eTestSequence::LoadItems(json& _jFile)
 bool eTestSequence::LoadBlocks(json& _jFile)
 {
 	eTestBlock* block = new eTestBlocks;
+	block->ConfigFileName(configFileName);
 	bool r = block->Load(_jFile);
 	if(r)
 	{
@@ -193,7 +201,6 @@ bool eTestSequences::Load(json& _jFile)
 		eTestSequence* sequence = nullptr;
 		if(!LoadItems(_jFile[i], sequence))
 		{
-			xIO::Log::Warning("[eTestSequences] Load fail");
 			return false;
 		}
 		if(!sequence || !sequence->Load(_jFile[i]))
@@ -206,6 +213,13 @@ bool eTestSequences::Load(json& _jFile)
 	return true;
 }
 //==================================================================================================
+//	eTestSequences::ConfigFileName
+//--------------------------------------------------------------------------------------------------
+void eTestSequences::ConfigFileName(const std::string& _fName)
+{
+	configFileName = _fName;
+}
+//==================================================================================================
 //	eTestSequences::LoadItems
 //--------------------------------------------------------------------------------------------------
 bool eTestSequences::LoadItems(json& _jFile, eTestSequence*& _sequence)
@@ -213,8 +227,16 @@ bool eTestSequences::LoadItems(json& _jFile, eTestSequence*& _sequence)
 	if(!_jFile["sequence"].is_null())
 	{
 		_sequence = new eTestSequence;
+		_sequence->ConfigFileName(configFileName);
 		return true;
 	}
+	std::string message = "[eTestSequences] ";
+				message += "\"";
+				message += configFileName;
+				message += "\"";
+				message += " LoadIdent fail:";
+				message += " Couldn't find ident - sequence";
+	xIO::Log::Error(message);
 	return false;
 }
 

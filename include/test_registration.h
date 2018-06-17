@@ -25,7 +25,7 @@ using eBlockRegister = eBlockRegisterBase<std::string>;
 //**************************************************************************************************
 //	CreateBlock
 //--------------------------------------------------------------------------------------------------
-TEST_API	eTestBlock*			CreateBlock(const std::string& name);
+TEST_API	eTestBlock*		CreateBlock(const std::string& name);
 
 //**************************************************************************************************
 //	CreateBlock

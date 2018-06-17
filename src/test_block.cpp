@@ -17,12 +17,14 @@ bool eTestBlock::Start()
 //--------------------------------------------------------------------------------------------------
 bool eTestBlock::Load(json& _jFile)
 {
-	if(!LoadIdent(_jFile))
-	{
-		xIO::Log::Warning("[eTestBlock] Load fail");
-		return false;
-	}
-	return true;
+	return LoadIdent(_jFile);
+}
+//==================================================================================================
+//	eTestBlock::ConfigFileName
+//--------------------------------------------------------------------------------------------------
+void eTestBlock::ConfigFileName(const std::string& _fName)
+{
+	configFileName = _fName;
 }
 //==================================================================================================
 //	eTestBlock::LoadIdent
@@ -35,6 +37,15 @@ bool eTestBlock::LoadIdent(json& _jFile)
 		resultLoader = ResultLoader();
 		ret = resultLoader->LoadResult(_jFile, this);
 		xBase::SAFE_DELETE(resultLoader);
+	}
+	else
+	{
+		std::string message = "[eTestBlock] ";
+					message += "\"";
+					message += configFileName;
+					message += "\"";
+					message += " LoadIdent fail: Couldn't find ident - result";
+		xIO::Log::Error(message);
 	}
 	return ret;
 }
@@ -68,6 +79,12 @@ bool eTestBlock::eResultLoader::LoadResult(json& _jFile, eTestBlock* _testBlock)
 		_testBlock->ResultExpected(_jFile["result"]);
 		return true;
 	}
+	std::string message = "[eResultLoader] ";
+				message += "\"";
+				message += _testBlock->configFileName;
+				message += "\"";
+				message += " LoadResult fail";
+	xIO::Log::Error(message);
 	return false;
 }
 

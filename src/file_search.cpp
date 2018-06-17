@@ -20,7 +20,6 @@ void Search::Begin(const FileName& _path, const FileName& _mask)
 	path = _path;
 	mask = _mask;
 	group = opendir(path.c_str());
-	xIO::Log::Debug(group);
 	Next();
 #endif//WINDOWS
 }
