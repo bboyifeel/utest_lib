@@ -14,6 +14,7 @@ public:
 	static void								Warning(std::string log);
 	static void								Flush(std::string path);
 	static const std::vector<std::string>&	Flush();
+	static void								Clear();
 protected:
 	static std::vector<std::string> logs;
 };

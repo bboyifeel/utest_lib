@@ -33,6 +33,7 @@ protected:
 	eResults				results;
 	xIO::FileName			configsPath;
 	json					jFile;
+	xIO::FileName			logsPath;
 };
 
 std::string TEST_API ToString(const eTester::eResults&);

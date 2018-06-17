@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "log.h"
 #include "file_name.h"
+#include "system.h"
 #include <fstream>
+#include <cstdlib>
 
 namespace xIO
 {
@@ -28,11 +30,16 @@ void Log::Warning(std::string _log)
 void Log::Flush(std::string _path)
 {
 	FileName path(_path);
-	std::ofstream file(path.Path().GetAdd(logFileName).str(), std::ios_base::ate);
-	for(int32_t i = 0; i < logs.size(); )
+	if(!xSystem::Access(path.str(), xSystem::A_EXIST))
 	{
-		file << std::endl;
+		xSystem::CreateDir(path.str());
+	}
+
+	std::ofstream file(path.Path().GetAdd(logFileName).str(), std::ios_base::ate);
+	for(int32_t i = 0; i < logs.size(); i++)
+	{
 		file << logs[i];
+		file << std::endl;
 	}
 	file.close();
 }
@@ -40,6 +47,11 @@ void Log::Flush(std::string _path)
 const std::vector<std::string>& Log::Flush()
 {
 	return logs;
+}
+
+void Log::Clear()
+{
+	logs.clear();
 }
 
 }//namespace xIO

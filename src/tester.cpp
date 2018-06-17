@@ -28,9 +28,14 @@ bool eTester::Do(const std::string& _path)
 //--------------------------------------------------------------------------------------------------
 bool eTester::Init()
 {
+	logsPath = xIO::FileName(xSystem::GetCurrentWorkingDir());
+	logsPath.Path().Add("Logs");
+
 	configsPath.Path();
-	if(!xSystem::Access(configsPath.str(), xSystem::A_READWRITE))
+
+	if(!xSystem::Access(configsPath.str(), xSystem::A_READ))
 	{
+		xIO::Log::Error("[eTester] Fail to access path " + configsPath.str());
 		return false;
 	}
 
@@ -48,6 +53,8 @@ void eTester::Done()
 		succeeded = false;
 		isInitialized = false;
 	}
+	xIO::Log::Flush(logsPath.str());
+	xIO::Log::Clear();
 }
 //==================================================================================================
 //	eTester::Run
