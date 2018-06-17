@@ -22,9 +22,9 @@ namespace xSystem
 #ifdef WINDOWS
 		int32_t a = _access_s(_name.c_str(), _mode);
 		return a == 0;
-#else WINDOWS
+#else
 		return access(_name.c_str(), _mode) == 0;
-#endif WINDOWS
+#endif
 	}
 
 	std::string GetCurrentWorkingDir()
