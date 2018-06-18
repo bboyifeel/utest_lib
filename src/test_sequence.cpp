@@ -49,10 +49,10 @@ bool eTestSequence::UpdateCurrent()
 		{
 			std::string message = "[eTestSequence] UpdateCurrent fail: Test \"";
 						message += currentBlock->Name();
-						message += "\"is failed: expected \"";
-						message += currentBlock->ResultExpected();
+						message += "\" is failed: expected \"";
+						message += std::to_string(currentBlock->ResultExpected());
 						message += "\" != actual \"";
-						message += currentBlock->ResultActual();
+						message += std::to_string(currentBlock->ResultActual());
 						message += "\"";
 			xIO::Log::Error(message);
 			return false;

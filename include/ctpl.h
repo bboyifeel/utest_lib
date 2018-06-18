@@ -237,7 +237,6 @@ public:
 		return pck->get_future();
 	}
 
-
 private:
 
 	// deleted
