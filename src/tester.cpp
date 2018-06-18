@@ -10,6 +10,8 @@
 namespace xTest
 {
 
+const int32_t defaultTheadCount = 1;
+
 //**************************************************************************************************
 //	eTester::eTester
 //--------------------------------------------------------------------------------------------------
@@ -38,12 +40,20 @@ bool eTester::Do(const std::string& _path)
 	}
 	return IsSucceeded();
 }
+
+int32_t eTester::ThreadCount()
+{
+	static unsigned concurentThreadsSupported = std::thread::hardware_concurrency() ?
+													std::thread::hardware_concurrency() : defaultTheadCount;
+	return concurentThreadsSupported;
+}
+
 //==================================================================================================
 //	eTester::ThreadPool
 //--------------------------------------------------------------------------------------------------
 ctpl::thread_pool& eTester::ThreadPool()
 {
-	static unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
+
 	static bool		initialization = true;
 	static ctpl::thread_pool pool;
 
@@ -51,7 +61,7 @@ ctpl::thread_pool& eTester::ThreadPool()
 	{
 		initialization = false;
 		
-		pool.resize(concurentThreadsSupported ? concurentThreadsSupported : 1);
+		pool.resize(this->ThreadCount());
 		
 		std::string message = "[eTester] ThreadPool: Created ";
 					message += std::to_string(pool.size());
@@ -108,7 +118,6 @@ void eTester::Run()
 {
 	xIO::Search cfgSearch(configsPath.str(), "*.json");
 	succeeded = cfgSearch.Valid();
-
 	for(; cfgSearch.Valid(); cfgSearch.Next())
 	{
 		results[cfgSearch.Name()] = false;
@@ -121,26 +130,37 @@ void eTester::Run()
 				message += "\"";
 				message += configsPath.str();
 				message += "\"";
-
 	xIO::Log::Debug(message);
 
-	std::string fileName;
+	std::vector<std::future<void>> resultsList;
+
 	for(eResults::iterator it = results.begin(); it != results.end(); ++it)
 	{
-		fileName = it->first;
-		results[fileName] = DoRunner(fileName);
-		succeeded &= results[fileName];
+		std::string fileName = it->first;
+		std::future<void> qt = this->ThreadPool().push(StartJSON, std::ref(*this), std::move(fileName));
+		resultsList.push_back(std::move(qt));
 	}
-	xIO::Log::Debug(ToString(results));				//to be changed
+	
+	for(auto &item : resultsList)
+	{
+		item.wait();
+	}
+	for(auto &item : results)
+	{
+		succeeded &= item.second;
+	}
+
+	xIO::Log::Debug("\n" + ToString(results));
 }
 //==================================================================================================
 //	eTester::DoRunner
 //--------------------------------------------------------------------------------------------------
-bool eTester::DoRunner(const std::string& _configName)
+void eTester::DoRunner(std::string _configName)
 {
 	std::string		fullPathWName = configsPath.GetAdd(_configName).str();
 	std::ifstream	file(fullPathWName);
-	jFile = json::parse(file);
+	json	jFile;
+	jFile = json::parse(file);	
 	file.close();
 
 	std::string message = "[eTester] ";
@@ -154,9 +174,12 @@ bool eTester::DoRunner(const std::string& _configName)
 	{
 		message += " DoRunner fail: invalid signature, it must start with \"test\"";
 		xIO::Log::Error(message);
-		return false;
-	}
 
+		results[_configName] = false;
+		return;
+	}
+	
+	eTestRunner*			runner			= nullptr;
 	if(!jFile["test"]["runner_name"].is_null())
 	{
 		std::string runnerClassName = jFile["test"]["runner_name"];
@@ -183,7 +206,15 @@ bool eTester::DoRunner(const std::string& _configName)
 	}
 
 	xBase::SAFE_DELETE(runner);
-	return result;
+	results[_configName] = result;
+}
+
+//**************************************************************************************************
+//	ToString
+//--------------------------------------------------------------------------------------------------
+void StartJSON(int id, eTester& tester, std::string fileName)
+{
+	tester.DoRunner(std::move(fileName));
 }
 
 //**************************************************************************************************
@@ -201,5 +232,6 @@ std::string ToString(const eTester::eResults& _results)
 	}
 	return res;
 }
+
 
 }//namespace xTest

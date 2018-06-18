@@ -17,6 +17,7 @@ public:
 	static void								Clear();
 protected:
 	static std::vector<std::string> logs;
+	static std::mutex				muteVector;
 };
 
 }//namespace xIO

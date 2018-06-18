@@ -17,6 +17,7 @@ class eTestRunner;
 //--------------------------------------------------------------------------------------------------
 class TEST_API eTester
 {
+	friend void				StartJSON(int id, eTester& tester, std::string fileName);
 public:
 	using eResults = std::map<std::string, bool>;
 	eTester();
@@ -25,19 +26,18 @@ public:
 	bool					Do(const std::string& path);
 	const eResults&			Results()		const	{ return results;	}
 	bool					IsSucceeded()			{ return succeeded;	}
+	int32_t					ThreadCount();
 	ctpl::thread_pool&		ThreadPool();
 protected:
 	bool					Init();
 	void					Done();
 	void					Run();
-	bool					DoRunner(const std::string& config);
+	void					DoRunner(std::string config);
 
 	bool					isInitialized	= false;
 	bool					succeeded		= false;
-	eTestRunner*			runner			= nullptr;
 	eResults				results;
 	xIO::FileName			configsPath;
-	json					jFile;
 	xIO::FileName			logsPath;
 };
 

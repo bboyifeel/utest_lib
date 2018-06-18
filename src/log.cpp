@@ -10,21 +10,28 @@ namespace xIO
 
 const std::string logFileName = "uTestLog.txt";
 
-std::vector<std::string> Log::logs = {};
+std::vector<std::string>	Log::logs = {};
+std::mutex					Log::muteVector = {};
 
 void Log::Debug(std::string _log)
 {
+	muteVector.lock();
 	logs.push_back(xSystem::GetCurrentTime() + _log);
+	muteVector.unlock();
 }
 
 void Log::Error(std::string _log)
 {
+	muteVector.lock();
 	logs.push_back(xSystem::GetCurrentTime() + "[ERROR] " + _log);
+	muteVector.unlock();
 }
 
 void Log::Warning(std::string _log)
 {
+	muteVector.lock();
 	logs.push_back(xSystem::GetCurrentTime() + "[WARNING] " + _log);
+	muteVector.unlock();
 }
 
 void Log::Flush(std::string _path)
@@ -51,7 +58,9 @@ const std::vector<std::string>& Log::Flush()
 
 void Log::Clear()
 {
+	muteVector.lock();
 	logs.clear();
+	muteVector.unlock();
 }
 
 }//namespace xIO
