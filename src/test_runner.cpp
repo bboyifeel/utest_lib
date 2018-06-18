@@ -3,6 +3,7 @@
 #include "test_sequence.h"
 #include "test_block.h"
 #include "test_registration.h"
+#include "tester.h"
 
 namespace xTest
 {
