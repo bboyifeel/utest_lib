@@ -53,7 +53,8 @@ protected:
 	virtual eResultLoader*	ResultLoader()	const		{ return new eResultLoader;			}
 
 	void				State(int32_t);
-	virtual void		NextState(int32_t oldState)		{}
+	virtual void		NextState(int32_t oldState);
+	virtual void		OnStartState()					{}
 
 	template <typename TEST_RESULT_ENUM>
 	inline void			ResultActual(TEST_RESULT_ENUM _result)	{ ResultActual((int32_t)_result); }

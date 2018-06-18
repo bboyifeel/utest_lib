@@ -68,6 +68,20 @@ void eTestBlock::State(int32_t _state)
 		NextState(oldState);
 	}
 }
+//==================================================================================================
+//	eTestBlock::NextState
+//--------------------------------------------------------------------------------------------------
+void eTestBlock::NextState(int32_t oldState)
+{
+	switch(state)
+	{
+	case S_STARTING:
+		OnStartState();
+		break;
+	default:
+		break;
+	}
+}
 
 //**************************************************************************************************
 //	eTestBlock::eResultLoader::LoadResult

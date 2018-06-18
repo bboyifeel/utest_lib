@@ -69,8 +69,7 @@ public:																							\
 																								\
 	cls() : eInherited(NAME) {}																	\
 	virtual ~cls() = default;																	\
-protected:																						\
-	virtual bool		LoadIdent(json&	)			override;
+
 
 #define TEST_BLOCK_DECLARE_END																	\
 };
