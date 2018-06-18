@@ -2,6 +2,11 @@
 
 #include "file_name.h"
 
+namespace ctpl
+{
+	class thread_pool;
+}
+
 namespace xTest
 {
 
@@ -14,13 +19,13 @@ class TEST_API eTester
 {
 public:
 	using eResults = std::map<std::string, bool>;
-
-	~eTester()										{ Done();			}
+	eTester();
+	~eTester();
 
 	bool					Do(const std::string& path);
 	const eResults&			Results()		const	{ return results;	}
 	bool					IsSucceeded()			{ return succeeded;	}
-
+	ctpl::thread_pool&		ThreadPool();
 protected:
 	bool					Init();
 	void					Done();

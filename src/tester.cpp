@@ -4,14 +4,29 @@
 #include "file_search.h"
 #include "test_runner.h"
 #include "test_registration.h"
-
+#include "ctpl.h"
 #include <fstream>
 
 namespace xTest
 {
 
 //**************************************************************************************************
-//	eTester::Do
+//	eTester::eTester
+//--------------------------------------------------------------------------------------------------
+eTester::eTester()
+{
+	logsPath = xIO::FileName(xSystem::GetCurrentWorkingDir());
+	logsPath.Path().Add("Logs");
+}
+//==================================================================================================
+//	eTester::ThreadPool
+//--------------------------------------------------------------------------------------------------
+eTester::~eTester()
+{
+	Done();
+}
+//==================================================================================================
+//	eTester::ThreadPool
 //--------------------------------------------------------------------------------------------------
 bool eTester::Do(const std::string& _path)
 {
@@ -24,13 +39,35 @@ bool eTester::Do(const std::string& _path)
 	return IsSucceeded();
 }
 //==================================================================================================
+//	eTester::ThreadPool
+//--------------------------------------------------------------------------------------------------
+ctpl::thread_pool& eTester::ThreadPool()
+{
+	static unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
+	static bool		initialization = true;
+	static ctpl::thread_pool pool;
+
+	if(initialization)
+	{
+		initialization = false;
+		
+		pool.resize(concurentThreadsSupported ? concurentThreadsSupported : 1);
+		
+		std::string message = "[eTester] ThreadPool: Created ";
+					message += std::to_string(pool.size());
+					message += " threads";
+		xIO::Log::Debug(message);
+	}
+
+	return pool;
+}
+
+//==================================================================================================
 //	eTester::Init
 //--------------------------------------------------------------------------------------------------
 bool eTester::Init()
 {
-	logsPath = xIO::FileName(xSystem::GetCurrentWorkingDir());
-	logsPath.Path().Add("Logs");
-
+	this->ThreadPool(); //Initialization
 	configsPath.Path();
 
 	if(!xSystem::Access(configsPath.str(), xSystem::A_READ))
