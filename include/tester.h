@@ -23,11 +23,11 @@ public:
 	eTester();
 	~eTester();
 
-	bool					Do(const std::string& path);
-	const eResults&			Results()		const	{ return results;	}
-	bool					IsSucceeded()			{ return succeeded;	}
-	int32_t					ThreadCount();
-	ctpl::thread_pool&		ThreadPool();
+	bool						Do(const std::string& path);
+	const eResults&				Results()		const	{ return results;	}
+	bool						IsSucceeded()			{ return succeeded;	}
+	static int32_t				ThreadCount();
+	static ctpl::thread_pool&	ThreadPool();
 protected:
 	bool					Init();
 	void					Done();

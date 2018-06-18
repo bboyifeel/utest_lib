@@ -53,7 +53,6 @@ int32_t eTester::ThreadCount()
 //--------------------------------------------------------------------------------------------------
 ctpl::thread_pool& eTester::ThreadPool()
 {
-
 	static bool		initialization = true;
 	static ctpl::thread_pool pool;
 
@@ -61,7 +60,7 @@ ctpl::thread_pool& eTester::ThreadPool()
 	{
 		initialization = false;
 		
-		pool.resize(this->ThreadCount());
+		pool.resize(eTester::ThreadCount());
 		
 		std::string message = "[eTester] ThreadPool: Created ";
 					message += std::to_string(pool.size());
@@ -77,7 +76,7 @@ ctpl::thread_pool& eTester::ThreadPool()
 //--------------------------------------------------------------------------------------------------
 bool eTester::Init()
 {
-	this->ThreadPool(); //Initialization
+	eTester::ThreadPool(); //Initialization
 	configsPath.Path();
 
 	if(!xSystem::Access(configsPath.str(), xSystem::A_READ))
