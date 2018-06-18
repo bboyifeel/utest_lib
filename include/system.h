@@ -16,5 +16,6 @@ enum AccessMode { A_EXIST = F_OK, A_WRITE = W_OK, A_READ = R_OK, A_READWRITE = A
 bool				Access(const std::string& name, AccessMode mode = A_EXIST);
 std::string			GetCurrentWorkingDir();
 void				CreateDir(const std::string& path);
+std::string			GetCurrentTime();
 
 }//xSystem

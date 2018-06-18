@@ -14,17 +14,17 @@ std::vector<std::string> Log::logs = {};
 
 void Log::Debug(std::string _log)
 {
-	logs.push_back(_log);
+	logs.push_back(xSystem::GetCurrentTime() + _log);
 }
 
 void Log::Error(std::string _log)
 {
-	logs.push_back("[ERROR] " + _log);
+	logs.push_back(xSystem::GetCurrentTime() + "[ERROR] " + _log);
 }
 
 void Log::Warning(std::string _log)
 {
-	logs.push_back("[WARNING] " + _log);
+	logs.push_back(xSystem::GetCurrentTime() + "[WARNING] " + _log);
 }
 
 void Log::Flush(std::string _path)
@@ -35,7 +35,7 @@ void Log::Flush(std::string _path)
 		xSystem::CreateDir(path.str());
 	}
 
-	std::ofstream file(path.Path().GetAdd(logFileName).str(), std::ios_base::ate);
+	std::ofstream file(path.Path().GetAdd(logFileName).str(), std::ios_base::app);
 	for(int32_t i = 0; i < logs.size(); i++)
 	{
 		file << logs[i];
