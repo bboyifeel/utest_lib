@@ -44,16 +44,23 @@ void Search::Next()
 #ifdef WINDOWS
 	valid = FindNextFile(group, &ffd) != 0;
 #else//WINDOWS
-	dirent* de = readdir(group);
-	valid = (de != NULL) && (fnmatch(mask.c_str(), de->d_name, FNM_NOESCAPE) != FNM_NOMATCH);
-	if(valid)
+	valid = true;
+
+	dirent* de; ;
+	while((de = readdir(group)))
 	{
-		ffd = *de;
-		FileName fn(path);
-		fn.Path();
-		fn.Add(Name());
-		stat(fn.c_str(), &file_stat);
+		bool shouldProcess = (fnmatch(mask.c_str(), de->d_name, FNM_NOESCAPE) != FNM_NOMATCH);
+		if(shouldProcess)
+		{
+			ffd = *de;
+			FileName fn(path);
+			fn.Path();
+			fn.Add(Name());
+			stat(fn.c_str(), &file_stat);
+			return;
+		}
 	}
+	valid = false;
 #endif//WINDOWS
 }
 //=============================================================================
